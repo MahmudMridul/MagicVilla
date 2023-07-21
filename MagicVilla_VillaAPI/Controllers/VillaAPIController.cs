@@ -22,7 +22,9 @@ namespace MagicVilla_VillaAPI.Controllers
         public ActionResult<VillaDTO> GetVilla(int id)
         {
             if(id == 0) return BadRequest();
+
             VillaDTO villa = VillaStore.villaList.FirstOrDefault(villa => villa.Id == id);
+
             if(villa == null) return NotFound();
             return Ok(villa);
         }
@@ -49,5 +51,42 @@ namespace MagicVilla_VillaAPI.Controllers
 
             return CreatedAtRoute("GetVilla", new { id = villaDTO.Id },villaDTO);
         }
+
+        //If return type is IActionResult, no need to specify the 
+        //the return type explicitly
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [HttpDelete("{id:int}", Name = "DeleteVilla")]
+        public IActionResult DeleteVilla(int id)
+        {
+            if (id == 0) return BadRequest();
+
+            VillaDTO villa = VillaStore.villaList.FirstOrDefault(villa => villa.Id == id);
+
+            if (villa == null) return NotFound();
+
+            VillaStore.villaList.Remove(villa);
+            return NoContent();
+        }
+
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [HttpPut("{id:int}", Name = "UpdateVilla")]
+        public IActionResult UpdateVilla(int id, [FromBody] VillaDTO villaDTO)
+        {
+            if(villaDTO == null || id != villaDTO.Id) return BadRequest();
+
+            VillaDTO villa = VillaStore.villaList.FirstOrDefault(villa => id == villa.Id);
+
+            if (villa == null) return NotFound(villaDTO);
+
+            villa.Name = villaDTO.Name;
+            villa.Occupancy = villaDTO.Occupancy;
+            villa.Sqft = villaDTO.Sqft;
+            return NoContent();
+        }
+
     }
 }
