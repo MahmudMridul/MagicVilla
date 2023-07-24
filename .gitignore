@@ -363,4 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # Migrations
-/Migrations
+MagicVilla_VillaAPI/Migrations
