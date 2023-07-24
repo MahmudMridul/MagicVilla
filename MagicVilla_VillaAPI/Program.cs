@@ -1,4 +1,6 @@
 
+using MagicVilla_VillaAPI.Data;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 namespace MagicVilla_VillaAPI
@@ -10,6 +12,10 @@ namespace MagicVilla_VillaAPI
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddDbContext<ApplicationDbContext>(option =>
+            {
+                option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnection"));
+            });
 
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Information()
