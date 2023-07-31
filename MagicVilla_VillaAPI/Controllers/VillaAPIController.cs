@@ -50,10 +50,9 @@ namespace MagicVilla_VillaAPI.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<VillaDTO> CreateVilla([FromBody]VillaDTO villaDTO)
+        public ActionResult<VillaDTO> CreateVilla([FromBody]VillaCreateDTO villaDTO)
         {
             if(villaDTO == null) return BadRequest(villaDTO);
-            if(villaDTO.Id > 0) return StatusCode(StatusCodes.Status500InternalServerError);
 
             bool nameExists = _db.Villas.FirstOrDefault(villa => villa.Name.ToLower() == villaDTO.Name.ToLower()) != null;
 
@@ -65,7 +64,6 @@ namespace MagicVilla_VillaAPI.Controllers
 
             Villa model = new Villa()
             {
-                Id = villaDTO.Id,
                 Name = villaDTO.Name,
                 Amenity = villaDTO.Amenity,
                 Description = villaDTO.Description,
@@ -78,7 +76,7 @@ namespace MagicVilla_VillaAPI.Controllers
             _db.Villas.Add(model);
             _db.SaveChanges();
 
-            return CreatedAtRoute("GetVilla", new { id = villaDTO.Id }, villaDTO);
+            return CreatedAtRoute("GetVilla", new { id = model.Id }, model);
         }
 
         //If return type is IActionResult, no need to specify the 
@@ -104,7 +102,7 @@ namespace MagicVilla_VillaAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpPut("{id:int}", Name = "UpdateVilla")]
-        public IActionResult UpdateVilla(int id, [FromBody] VillaDTO villaDTO)
+        public IActionResult UpdateVilla(int id, [FromBody] VillaUpdateDTO villaDTO)
         {
             if(villaDTO == null || id != villaDTO.Id) return BadRequest();
 
@@ -129,7 +127,7 @@ namespace MagicVilla_VillaAPI.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult UpdatePartialVilla(int id, JsonPatchDocument<VillaDTO> patchDTO) 
+        public IActionResult UpdatePartialVilla(int id, JsonPatchDocument<VillaUpdateDTO> patchDTO) 
         {
             if (patchDTO == null || id == 0) return BadRequest();
 
@@ -137,7 +135,7 @@ namespace MagicVilla_VillaAPI.Controllers
 
             if (villa == null) return NotFound(patchDTO);
 
-            VillaDTO villaDTO = new VillaDTO()
+            VillaUpdateDTO villaDTO = new VillaUpdateDTO()
             {
                 Id = villa.Id,
                 Name = villa.Name,
