@@ -22,6 +22,7 @@ namespace MagicVilla_VillaAPI
             builder.Services.AddAutoMapper(typeof(MappingConfig));
 
             builder.Services.AddScoped<IVillaRepository, VillaRepository>();
+            builder.Services.AddScoped<IVillaNumberRepository, VillaNumberRepository>();
 
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Information()
