@@ -5,6 +5,7 @@ using MagicVilla_VillaAPI.Repository.IRepository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Text;
 
@@ -60,7 +61,33 @@ namespace MagicVilla_VillaAPI
             .AddXmlDataContractSerializerFormatters(); //now api can return xml format data too
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(option =>
+            {
+                option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+                {
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Scheme = "Bearer",
+                    Description = "JWT Authorization. \r\n\r\nEnter 'Bearer' [space] [your token]"
+                });
+                option.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme()
+                        {
+                            Reference = new OpenApiReference()
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Scheme = "oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header
+                        },
+                        new List<string>()
+                    }
+                });
+            });
 
             var app = builder.Build();
 
