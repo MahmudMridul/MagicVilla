@@ -22,6 +22,8 @@ namespace MagicVilla_VillaAPI.Controllers
         }
 
         [HttpPost("login")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<APIResponse>> Login([FromBody] LoginRequestDTO model)
         {
             LoginResponseDTO response = await _userRepository.Login(model);
@@ -39,6 +41,8 @@ namespace MagicVilla_VillaAPI.Controllers
         }
 
         [HttpPost("register")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<APIResponse>> Register([FromBody] RegistrationRequestDTO model)
         {
             bool uniqueUser = _userRepository.IsUniqueUser(model.UserName);
