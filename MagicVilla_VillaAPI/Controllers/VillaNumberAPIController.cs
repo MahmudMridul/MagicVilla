@@ -11,8 +11,10 @@ using System.Net;
 
 namespace MagicVilla_VillaAPI.Controllers
 {
-    [Route("api/VillaNumberAPI")]
+    [Route("api/v{version:apiVersion}/VillaNumberAPI")]
     [ApiController]
+    [ApiVersion("1.0")]
+    [ApiVersion("2.0")] // Required when you have multiple versions
     public class VillaNumberAPIController : ControllerBase
     {
         private readonly ILogger<VillaAPIController> _logger;
@@ -32,6 +34,7 @@ namespace MagicVilla_VillaAPI.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [MapToApiVersion("1.0")]
         public async Task<ActionResult<APIResponse>> GetVillaNumbers()
         {
             try
@@ -50,6 +53,29 @@ namespace MagicVilla_VillaAPI.Controllers
                 return _apiResponse;
             }
             
+        }
+
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [MapToApiVersion("2.0")]
+        public async Task<ActionResult<APIResponse>> GetAllVillaNumbers()
+        {
+            try
+            {
+                _logger.LogInformation("GET all villas");
+                IEnumerable<VillaNumber> villaNumbers = await _dbVillaNumber.GetAllAsync();
+                _apiResponse.Result = _mapper.Map<IEnumerable<VillaNumberDTO>>(villaNumbers);
+                _apiResponse.StatusCode = HttpStatusCode.OK;
+                _apiResponse.IsSuccess = true;
+                return Ok(_apiResponse);
+            }
+            catch (Exception ex)
+            {
+                _apiResponse.IsSuccess = false;
+                _apiResponse.ErrorMessages = new List<string>() { ex.Message };
+                return _apiResponse;
+            }
+
         }
 
         [HttpGet("{id:int}", Name = "GetVillaNumber")]

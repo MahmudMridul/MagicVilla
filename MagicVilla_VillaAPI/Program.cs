@@ -3,6 +3,7 @@ using MagicVilla_VillaAPI.Data;
 using MagicVilla_VillaAPI.Repository;
 using MagicVilla_VillaAPI.Repository.IRepository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -53,6 +54,19 @@ namespace MagicVilla_VillaAPI
                 .WriteTo.File("log/villalogs.txt", rollingInterval: RollingInterval.Minute, retainedFileCountLimit: 5)
                 .CreateLogger();
             builder.Host.UseSerilog();
+
+            // Add versioning
+            builder.Services.AddApiVersioning(option =>
+            {
+                option.AssumeDefaultVersionWhenUnspecified = true;
+                option.DefaultApiVersion = new ApiVersion(1, 0);
+                option.ReportApiVersions = true;
+            });
+            builder.Services.AddVersionedApiExplorer(option =>
+            {
+                option.GroupNameFormat = "'v'VVV";
+                option.SubstituteApiVersionInUrl = true;
+            });
 
             builder.Services.AddControllers(option =>
             {
