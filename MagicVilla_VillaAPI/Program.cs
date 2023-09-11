@@ -101,6 +101,40 @@ namespace MagicVilla_VillaAPI
                         new List<string>()
                     }
                 });
+                option.SwaggerDoc("v1", new OpenApiInfo()
+                {
+                    Version = "v1",
+                    Title = "Magic Villa v1",
+                    Description = "API to manage Villa",
+                    TermsOfService = new Uri("https://example.com/terms"),
+                    Contact = new OpenApiContact()
+                    {
+                        Name = "Example Contact",
+                        Url = new Uri("https://example.com/terms")
+                    },
+                    License = new OpenApiLicense()
+                    {
+                        Name = "Example License",
+                        Url = new Uri("https://example.com/terms")
+                    }
+                });
+                option.SwaggerDoc("v2", new OpenApiInfo()
+                {
+                    Version = "v2",
+                    Title = "Magic Villa v2",
+                    Description = "API to manage Villa",
+                    TermsOfService = new Uri("https://example.com/terms"),
+                    Contact = new OpenApiContact()
+                    {
+                        Name = "Example Contact",
+                        Url = new Uri("https://example.com/terms")
+                    },
+                    License = new OpenApiLicense()
+                    {
+                        Name = "Example License",
+                        Url = new Uri("https://example.com/terms")
+                    }
+                });
             });
 
             var app = builder.Build();
@@ -109,7 +143,10 @@ namespace MagicVilla_VillaAPI
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(options => {
+                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "Magic_Villa_v1");
+                    options.SwaggerEndpoint("/swagger/v2/swagger.json", "Magic_Villa_v2");
+                });
             }
 
             app.UseHttpsRedirection();
