@@ -10,6 +10,7 @@ namespace MagicVilla_VillaAPI.Controllers
 {
     [Route("api/UsersAuth")]
     [ApiController]
+    [ApiVersionNeutral]
     public class UsersController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
@@ -27,7 +28,7 @@ namespace MagicVilla_VillaAPI.Controllers
         public async Task<ActionResult<APIResponse>> Login([FromBody] LoginRequestDTO model)
         {
             LoginResponseDTO response = await _userRepository.Login(model);
-            if(response.User == null || string.IsNullOrEmpty(response.Token))
+            if (response.User == null || string.IsNullOrEmpty(response.Token))
             {
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 _response.IsSuccess = false;
@@ -46,7 +47,7 @@ namespace MagicVilla_VillaAPI.Controllers
         public async Task<ActionResult<APIResponse>> Register([FromBody] RegistrationRequestDTO model)
         {
             bool uniqueUser = _userRepository.IsUniqueUser(model.UserName);
-            if(!uniqueUser)
+            if (!uniqueUser)
             {
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 _response.IsSuccess = false;
@@ -54,7 +55,7 @@ namespace MagicVilla_VillaAPI.Controllers
                 return _response;
             }
             LocalUser user = await _userRepository.Register(model);
-            if(user == null)
+            if (user == null)
             {
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 _response.IsSuccess = false;

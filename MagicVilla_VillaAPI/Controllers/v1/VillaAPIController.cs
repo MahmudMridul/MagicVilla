@@ -9,10 +9,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 
-namespace MagicVilla_VillaAPI.Controllers
+namespace MagicVilla_VillaAPI.Controllers.v1
 {
     [Route("api/VillaAPI")]
     [ApiController]
+    [ApiVersion("1.0")]
     public class VillaAPIController : ControllerBase
     {
         private readonly ILogger<VillaAPIController> _logger;
@@ -50,7 +51,7 @@ namespace MagicVilla_VillaAPI.Controllers
                 _apiResponse.ErrorMessages = new List<string>() { ex.Message };
                 return _apiResponse;
             }
-            
+
         }
 
         [HttpGet("{id:int}", Name = "GetVilla")]
@@ -97,14 +98,14 @@ namespace MagicVilla_VillaAPI.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<ActionResult<APIResponse>> CreateVilla([FromBody]VillaCreateDTO createDTO)
+        public async Task<ActionResult<APIResponse>> CreateVilla([FromBody] VillaCreateDTO createDTO)
         {
             try
             {
-                if (createDTO == null) 
+                if (createDTO == null)
                 {
                     _apiResponse.StatusCode = HttpStatusCode.BadRequest;
-                    return BadRequest(_apiResponse); 
+                    return BadRequest(_apiResponse);
                 }
 
                 bool nameExists = await _dbVilla.GetAsync(villa => villa.Name.ToLower() == createDTO.Name.ToLower()) != null;
@@ -130,7 +131,7 @@ namespace MagicVilla_VillaAPI.Controllers
                 _apiResponse.ErrorMessages = new List<string>() { ex.Message };
                 return _apiResponse;
             }
-            
+
         }
 
         //If return type is IActionResult, no need to specify the 
@@ -210,7 +211,7 @@ namespace MagicVilla_VillaAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<ActionResult<APIResponse>> UpdatePartialVilla(int id, JsonPatchDocument<VillaUpdateDTO> patchDTO) 
+        public async Task<ActionResult<APIResponse>> UpdatePartialVilla(int id, JsonPatchDocument<VillaUpdateDTO> patchDTO)
         {
             try
             {
