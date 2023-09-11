@@ -18,6 +18,9 @@ namespace MagicVilla_VillaAPI
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // Add caching
+            builder.Services.AddResponseCaching();
+
             // Add services to the container.
             builder.Services.AddDbContext<ApplicationDbContext>(option =>
             {

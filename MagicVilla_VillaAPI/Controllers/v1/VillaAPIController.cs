@@ -11,7 +11,8 @@ using System.Net;
 
 namespace MagicVilla_VillaAPI.Controllers.v1
 {
-    [Route("api/VillaAPI")]
+    //[Route("api/VillaAPI")]
+    [Route("api/v{version:apiVersion}/VillaAPI")]
     [ApiController]
     [ApiVersion("1.0")]
     public class VillaAPIController : ControllerBase
@@ -34,6 +35,8 @@ namespace MagicVilla_VillaAPI.Controllers.v1
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ResponseCache(Duration = 30)] // cache for 30 seconds
+        //[ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)] // when don't want to cache
         public async Task<ActionResult<APIResponse>> GetVillas()
         {
             try
