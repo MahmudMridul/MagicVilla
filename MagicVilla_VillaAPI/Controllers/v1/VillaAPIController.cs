@@ -38,7 +38,7 @@ namespace MagicVilla_VillaAPI.Controllers.v1
         [ResponseCache(CacheProfileName = "Default30")]
         //[ResponseCache(Duration = 30)] // cache for 30 seconds
         //[ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)] // when don't want to cache
-        public async Task<ActionResult<APIResponse>> GetVillas([FromQuery] int? occupancy, [FromQuery] string? name)
+        public async Task<ActionResult<APIResponse>> GetVillas([FromQuery] int? occupancy, [FromQuery] string? name, int pageSize = 2, int pageNumber = 1)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace MagicVilla_VillaAPI.Controllers.v1
                 IEnumerable<Villa> villas;
                 if(occupancy > 0)
                 {
-                    villas = await _dbVilla.GetAllAsync(villa => villa.Occupancy == occupancy);
+                    villas = await _dbVilla.GetAllAsync(villa => villa.Occupancy == occupancy, pageSize:pageSize, pageNumber:pageNumber);
                 }
                 else
                 {
