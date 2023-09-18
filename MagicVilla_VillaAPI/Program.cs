@@ -73,7 +73,12 @@ namespace MagicVilla_VillaAPI
 
             builder.Services.AddControllers(option =>
             {
-                option.ReturnHttpNotAcceptable = true; //returns error if api returns invalid response type
+                option.CacheProfiles.Add("Default30",
+                    new CacheProfile()
+                    {
+                        Duration = 30
+                    });
+                //option.ReturnHttpNotAcceptable = true; //returns error if api returns invalid response type
             }).AddNewtonsoftJson()
             .AddXmlDataContractSerializerFormatters(); //now api can return xml format data too
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
