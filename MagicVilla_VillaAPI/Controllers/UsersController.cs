@@ -54,7 +54,7 @@ namespace MagicVilla_VillaAPI.Controllers
                 _response.ErrorMessages = new List<string>() { "Username exists" };
                 return _response;
             }
-            LocalUser user = await _userRepository.Register(model);
+            UserDTO user = await _userRepository.Register(model);
             if (user == null)
             {
                 _response.StatusCode = HttpStatusCode.BadRequest;
